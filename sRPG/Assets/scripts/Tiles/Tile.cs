@@ -24,29 +24,148 @@ public class Tile : MonoBehaviour {
 	
 	public void generateNeighbors() {		
 		neighbors = new List<Tile>();
-		
-		//up
-		if (gridPosition.y > 0) {
-			Vector2 n = new Vector2(gridPosition.x, gridPosition.y - 1);
-			neighbors.Add(GameManager.instance.map[(int)Mathf.Round(n.x)][(int)Mathf.Round(n.y)]);
-		}
-		//down
-		if (gridPosition.y < GameManager.instance.mapSize - 1) {
-			Vector2 n = new Vector2(gridPosition.x, gridPosition.y + 1);
-			neighbors.Add(GameManager.instance.map[(int)Mathf.Round(n.x)][(int)Mathf.Round(n.y)]);
-		}		
-		
-		//left
-		if (gridPosition.x > 0) {
-			Vector2 n = new Vector2(gridPosition.x - 1, gridPosition.y);
-			neighbors.Add(GameManager.instance.map[(int)Mathf.Round(n.x)][(int)Mathf.Round(n.y)]);
-		}
-		//right
-		if (gridPosition.x < GameManager.instance.mapSize - 1) {
-			Vector2 n = new Vector2(gridPosition.x + 1, gridPosition.y);
-			neighbors.Add(GameManager.instance.map[(int)Mathf.Round(n.x)][(int)Mathf.Round(n.y)]);
-		}
-	}
+
+        //up
+        if ((gridPosition.y > 0) && ((gridPosition.x <= 0) || (gridPosition.x >= GameManager.instance.mapSize - 1)))
+        {
+            Vector2 n = new Vector2(gridPosition.x, gridPosition.y - 1);
+            neighbors.Add(GameManager.instance.map[(int)Mathf.Round(n.x)][(int)Mathf.Round(n.y)]);
+        }
+       
+        //up-left
+        if ((gridPosition.y > 0) && (gridPosition.x > 0))
+        {
+            Vector2 n = new Vector2(gridPosition.x - 1, gridPosition.y - 1);
+            neighbors.Add(GameManager.instance.map[(int)Mathf.Round(n.x)][(int)Mathf.Round(n.y)]);
+        }
+
+        //up-right
+        if ((gridPosition.y > 0) && (gridPosition.x < GameManager.instance.mapSize - 1))
+        {
+            Vector2 n = new Vector2(gridPosition.x + 1, gridPosition.y - 1);
+            neighbors.Add(GameManager.instance.map[(int)Mathf.Round(n.x)][(int)Mathf.Round(n.y)]);
+        }
+
+        //down
+        if ((gridPosition.y < GameManager.instance.mapSize - 1) && ((gridPosition.x <= 0) || (gridPosition.x >= GameManager.instance.mapSize - 1)))
+        {
+            Vector2 n = new Vector2(gridPosition.x, gridPosition.y + 1);
+            neighbors.Add(GameManager.instance.map[(int)Mathf.Round(n.x)][(int)Mathf.Round(n.y)]);
+        }
+
+        //down-left
+        if ((gridPosition.y < GameManager.instance.mapSize - 1) && (gridPosition.x > 0))
+        {
+            Vector2 n = new Vector2(gridPosition.x - 1, gridPosition.y + 1);
+            neighbors.Add(GameManager.instance.map[(int)Mathf.Round(n.x)][(int)Mathf.Round(n.y)]);
+        }
+
+        //down-right
+        if ((gridPosition.y < GameManager.instance.mapSize - 1) && (gridPosition.x < GameManager.instance.mapSize - 1))
+        {
+            Vector2 n = new Vector2(gridPosition.x + 1, gridPosition.y + 1);
+            neighbors.Add(GameManager.instance.map[(int)Mathf.Round(n.x)][(int)Mathf.Round(n.y)]);
+        }
+
+        //left
+
+        if ((gridPosition.x > 0) && ((gridPosition.y <= 0) || (gridPosition.y >= GameManager.instance.mapSize - 1)))
+        {
+            Vector2 n = new Vector2(gridPosition.x - 1, gridPosition.y);
+            neighbors.Add(GameManager.instance.map[(int)Mathf.Round(n.x)][(int)Mathf.Round(n.y)]);
+        }
+
+        //right
+        if ((gridPosition.x < GameManager.instance.mapSize - 1) && ((gridPosition.y <= 0) || (gridPosition.y >= GameManager.instance.mapSize - 1)))
+        {
+            Vector2 n = new Vector2(gridPosition.x + 1, gridPosition.y);
+            neighbors.Add(GameManager.instance.map[(int)Mathf.Round(n.x)][(int)Mathf.Round(n.y)]);
+        }
+        //if (gridPosition.y > 0) {
+        //          if (gridPosition.x > 0)
+        //          {
+        //              //up-left
+        //              Vector2 n = new Vector2(gridPosition.x - 1, gridPosition.y - 1);
+        //              neighbors.Add(GameManager.instance.map[(int)Mathf.Round(n.x)][(int)Mathf.Round(n.y)]);
+        //          }
+        //          else if (gridPosition.x < GameManager.instance.mapSize - 1)
+        //          {
+        //              //up-right
+        //              Vector2 n = new Vector2(gridPosition.x + 1, gridPosition.y - 1);
+        //              neighbors.Add(GameManager.instance.map[(int)Mathf.Round(n.x)][(int)Mathf.Round(n.y)]);
+        //          }
+        //          else
+        //          {
+        //              //up
+        //              Vector2 n = new Vector2(gridPosition.x, gridPosition.y - 1);
+        //              neighbors.Add(GameManager.instance.map[(int)Mathf.Round(n.x)][(int)Mathf.Round(n.y)]);
+        //          }
+        //}
+
+        //if (gridPosition.y < GameManager.instance.mapSize - 1) {
+        //          if (gridPosition.x > 0)
+        //          {
+        //              //down-left
+        //              Vector2 n = new Vector2(gridPosition.x - 1, gridPosition.y + 1);
+        //              neighbors.Add(GameManager.instance.map[(int)Mathf.Round(n.x)][(int)Mathf.Round(n.y)]);
+        //          }
+        //          else if (gridPosition.x < GameManager.instance.mapSize - 1)
+        //          {
+        //              //down-right
+        //              Vector2 n = new Vector2(gridPosition.x + 1, gridPosition.y + 1);
+        //              neighbors.Add(GameManager.instance.map[(int)Mathf.Round(n.x)][(int)Mathf.Round(n.y)]);
+        //          }
+        //          else
+        //          {
+        //              //down
+        //              Vector2 n = new Vector2(gridPosition.x, gridPosition.y + 1);
+        //              neighbors.Add(GameManager.instance.map[(int)Mathf.Round(n.x)][(int)Mathf.Round(n.y)]);
+        //          } 
+        //}		
+
+
+        //if (gridPosition.x > 0) {
+        //          if (gridPosition.y > 0)
+        //          {
+        //              //up-left
+        //              Vector2 n = new Vector2(gridPosition.x - 1, gridPosition.y - 1);
+        //              neighbors.Add(GameManager.instance.map[(int)Mathf.Round(n.x)][(int)Mathf.Round(n.y)]);
+        //          }
+        //          else if (gridPosition.x < GameManager.instance.mapSize - 1)
+        //          {
+        //              //down-left
+        //              Vector2 n = new Vector2(gridPosition.x - 1, gridPosition.y + 1);
+        //              neighbors.Add(GameManager.instance.map[(int)Mathf.Round(n.x)][(int)Mathf.Round(n.y)]);
+        //          }
+        //          else
+        //          {
+        //              //left
+        //              Vector2 n = new Vector2(gridPosition.x - 1, gridPosition.y);
+        //              neighbors.Add(GameManager.instance.map[(int)Mathf.Round(n.x)][(int)Mathf.Round(n.y)]);
+        //          }            
+        //}
+
+        //if (gridPosition.x < GameManager.instance.mapSize - 1) {
+        //          if (gridPosition.x > 0)
+        //          {
+        //              //up-right
+        //              Vector2 n = new Vector2(gridPosition.x + 1, gridPosition.y - 1);
+        //              neighbors.Add(GameManager.instance.map[(int)Mathf.Round(n.x)][(int)Mathf.Round(n.y)]);
+        //          }
+        //          else if (gridPosition.x < GameManager.instance.mapSize - 1)
+        //          {
+        //              //down-right
+        //              Vector2 n = new Vector2(gridPosition.x + 1, gridPosition.y + 1);
+        //              neighbors.Add(GameManager.instance.map[(int)Mathf.Round(n.x)][(int)Mathf.Round(n.y)]);
+        //          }
+        //          else
+        //          {
+        //              //right
+        //              Vector2 n = new Vector2(gridPosition.x + 1, gridPosition.y);
+        //              neighbors.Add(GameManager.instance.map[(int)Mathf.Round(n.x)][(int)Mathf.Round(n.y)]);
+        //          }
+        //}
+    }
 	
 	// Update is called once per frame
 	void Update () {
