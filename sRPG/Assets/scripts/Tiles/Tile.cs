@@ -17,6 +17,8 @@ public class Tile : MonoBehaviour {
 	
 	public List<Tile> neighbors = new List<Tile>();
 
+    public List<Tile> path = new List<Tile>();
+    public int cost = 0 ;     //  999999?
 	// Use this for initialization
 	void Start () {
 		if (Application.loadedLevelName == "gameScene") generateNeighbors();
