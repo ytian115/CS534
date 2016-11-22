@@ -16,9 +16,21 @@ public class Tile : MonoBehaviour {
 	public bool impassible = false;
 	
 	public List<Tile> neighbors = new List<Tile>();
+	public Tile parent;
 
     public List<Tile> path = new List<Tile>();
+
     public int cost = 0 ;     //  999999?
+
+	public int gCost;
+	public int hCost;
+	public int fCost {
+		get {
+			return gCost + hCost;
+		}
+	}
+
+
 	// Use this for initialization
 	void Start () {
 		if (Application.loadedLevelName == "gameScene") generateNeighbors();
