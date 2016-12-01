@@ -14,6 +14,42 @@ public class TileRange : MonoBehaviour {
 	
 	}
 
+<<<<<<< HEAD
+=======
+	public List<Tile> Findpath(Tile startTile, Tile targetTile) {
+		List<Tile> openSet = new List<Tile> ();
+		HashSet<Tile> closedSet = new HashSet<Tile> ();
+		openSet.Add (startTile);
+
+		while (openSet.Count > 0) {
+			Tile currentTile = openSet [0];
+			for (int i = 1; i < openSet.Count; i++) {
+				if (openSet [i].fCost < currentTile.fCost || openSet [i].fCost == currentTile.fCost && openSet [i].hCost < currentTile.hCost) {
+					currentTile = openSet [i];
+				}
+			}
+
+			openSet.Remove (currentTile);
+			closedSet.Add (currentTile);
+
+			if (currentTile = targetTile) {
+				//find the path from startTile by using tile.parent
+
+
+				return null;
+			}
+
+			foreach (Tile neighbor in currentTile.neighbors) {
+				if (neighbor.impassible || closedSet.Contains(neighbor)) continue;
+			}
+
+		}
+		//tmp
+		return null;
+
+	}
+
+>>>>>>> master
     public static List<Tile> FindHighlight(Tile originTile, int movementPoints, Vector2[] occupied, bool staticRange)
     {
         List<Tile> closed = new List<Tile>();
@@ -44,4 +80,9 @@ public class TileRange : MonoBehaviour {
 
         return result;
     }
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> master
 }
