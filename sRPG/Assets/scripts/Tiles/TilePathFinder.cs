@@ -9,6 +9,7 @@ public class TilePathFinder : MonoBehaviour {
 	}
 
 	public static List<Tile> FindPath(Tile startTile, Tile targetTile, Vector2[] occupied) {
+		return targetTile.path;
 		List<Tile> openSet = new List<Tile> ();
 		HashSet<Tile> closedSet = new HashSet<Tile> ();
 		openSet.Add (startTile);

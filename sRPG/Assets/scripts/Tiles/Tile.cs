@@ -20,10 +20,10 @@ public class Tile : MonoBehaviour {
 
     public List<Tile> path = new List<Tile>();
 
-    public float cost = 0 ;     //  999999?
+    public int cost = 0 ;     //  999999?
 
-	public int gCost;
-	public int hCost;
+	public int gCost =0;
+	public int hCost =0 ;
 	public int fCost {
 		get {
 			return gCost + hCost;

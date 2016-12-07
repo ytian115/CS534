@@ -56,6 +56,7 @@ public class TileHighlight {
 //	}
 	public static List<Tile> FindHighlight(Tile originTile, int movementPoints, Vector2[] occupied, bool staticRange)
 	{
+//		Debug.Log ("11111");
 		List<Tile> closed = new List<Tile>();
 		List<Tile> open = new List<Tile>();
 		List<Tile> result = new List<Tile>();
@@ -64,15 +65,18 @@ public class TileHighlight {
 		float rightMax = Mathf.Min(originTile.gridPosition.x + movementPoints, GameManager.instance.mapSize -1);
 		float upMax = Mathf.Max(originTile.gridPosition.y - movementPoints, 0);
 		float downMax = Mathf.Min(originTile.gridPosition.y + movementPoints, GameManager.instance.mapSize - 1);
-		for (int i=(int)leftMax;i<(int)rightMax;i++)
+		for (int i=(int)leftMax;i<=(int)rightMax;i++)
 		{
-			for(int j = (int)upMax; j < (int)downMax; j++)
+			for(int j = (int)upMax; j <= (int)downMax; j++)
 			{
 				Tile tmpTile = new Tile();
-				tmpTile.gridPosition.x = i;
-				tmpTile.gridPosition.y = j;
-
+//				tmpTile.gridPosition.x = i;
+//				tmpTile.gridPosition.y = j;
+				tmpTile = GameManager.instance.map [i] [j];
+				if (originTile.gridPosition.x == tmpTile.gridPosition.x && originTile.gridPosition.y == tmpTile.gridPosition.y)
+					continue;
 				List<Tile> path = new List<Tile>();
+//				Debug.Log ("enter a star");
 				tmpTile.path = AstarFindpath (originTile, tmpTile); // a star return a path.
 				tmpTile.cost = GetCost(tmpTile);
 				if(tmpTile.cost <= movementPoints)
@@ -81,17 +85,31 @@ public class TileHighlight {
 				}
 			}
 		}
-		result.Distinct ();
+//		result.Distinct ();
 		return result;
 	}
 
 	//calculate the cost of real path
 	public static int GetCost (Tile currentTile) {
 		int realCost = 0;
-		while (currentTile.path != null) {
-			realCost += currentTile.path [0].movementCost;
-			currentTile.path.Remove (currentTile.path [0]);
+//		while (currentTile.path != null) {
+//			realCost += currentTile.path [0].movementCost;
+//			currentTile.path.Remove (currentTile.path [0]);
+//		}
+		if (currentTile.path == null) {
+			return 9999;
 		}
+		Debug.Log (currentTile.gridPosition);
+		if (currentTile.path.Count == 1) {
+			Debug.Log ("only itself");
+			return 0;
+		}
+		for(int i=1;i<currentTile.path.Count;i++)
+		{
+			Debug.Log ("move cost =" + currentTile.path [i].movementCost);
+			realCost +=currentTile.path [i].movementCost;
+		}
+		Debug.Log ("real cost is "+ realCost);
 		return realCost;
 	}
 
@@ -116,11 +134,13 @@ public class TileHighlight {
 			openSet.Remove (currentTile);
 			closedSet.Add (currentTile);
 
-			if (currentTile = targetTile) {
+			if (currentTile.gridPosition == targetTile.gridPosition) {
 				//find the path from startTile by using tile.parent
-				Tile tmpcurTile = currentTile;
+//				Debug.Log("find the target");
+				Tile tmpcurTile = new Tile();
+				tmpcurTile = currentTile;
 				List<Tile> tmppath = new List<Tile> ();
-				while (tmpcurTile.parent != startTile) {
+				while (tmpcurTile!= startTile) {
 					tmppath.Add (tmpcurTile);
 					tmpcurTile = tmpcurTile.parent;
 				}
@@ -131,11 +151,12 @@ public class TileHighlight {
 
 				return tmppath;
 			}
-
+			currentTile.generateNeighbors ();
 			foreach (Tile neighbor in currentTile.neighbors) {
 				if (neighbor.impassible || closedSet.Contains(neighbor)) continue;
 
-				int newMovecost2Neighbor = currentTile.gCost + GetDistance (currentTile, neighbor);
+//				int newMovecost2Neighbor = currentTile.gCost + GetDistance (currentTile, neighbor);
+				int newMovecost2Neighbor = currentTile.gCost + neighbor.movementCost;
 				if (newMovecost2Neighbor < neighbor.gCost || !openSet.Contains (neighbor)) {
 					neighbor.gCost = newMovecost2Neighbor;
 					neighbor.hCost = GetDistance (neighbor, targetTile);
