@@ -19,7 +19,54 @@ public class AIPlayer : Player {
 		}
 		base.Update();
 	}
-	
+
+	//calculate the scores
+	public float attackScore(Player opponent, int specialRange)
+	{
+		int AP = base.damageBase;
+		int TAP = opponent.damageBase;
+		int THP = opponent.HP;
+		List<Tile> nearbyTiles= TileHighlight.FindHighlight (GameManager.instance.map [(int)opponent.gridPosition.x] [(int)opponent.gridPosition.y], specialRange, true);
+		int amount = 0;
+		foreach (Tile t in nearbyTiles) {
+			foreach (Player tmp in GameManager.instance.players.Where(x => x.GetType() != typeof(UserPlayer))){
+				if (t.gridPosition == tmp.gridPosition)
+					amount++;
+			}
+		}
+		float attScore = 0.5f * AP * TAP * (1 + amount*0.1f) / THP;
+		return attScore;
+	}
+
+	public float moveScore(Player opponent, int specialRange)
+	{
+		int AP = base.damageBase;
+		int TAP = opponent.damageBase;
+		int THP = opponent.HP;
+		Tile tmpTile = GameManager.instance.map [(int)opponent.gridPosition.x] [(int)opponent.gridPosition.y];
+		Tile originTile = GameManager.instance.map [(int)base.gridPosition.x] [(int)base.gridPosition.y];
+		List<Tile> path = new List<Tile>();
+		tmpTile.path = TileHighlight.AstarFindpath (originTile, tmpTile, GameManager.instance.players.Where(x => x.gridPosition != gridPosition).Select(x => x.gridPosition).ToArray()); // a star return a path.
+		int Distance = TileHighlight.GetCost(tmpTile);
+		List<Tile> nearbyTiles= TileHighlight.FindHighlight (GameManager.instance.map [(int)opponent.gridPosition.x] [(int)opponent.gridPosition.y], specialRange, true);
+		int alleyAmount = 0;
+		int enemyAmount = 0;
+		foreach (Tile t in nearbyTiles) {
+			foreach (Player tmp in GameManager.instance.players.Where(x => x.GetType() != typeof(AIPlayer))){
+				if (t.gridPosition == tmp.gridPosition)
+					enemyAmount++;
+			}
+			foreach (Player tmp in GameManager.instance.players.Where(x => x.GetType() != typeof(UserPlayer))){
+				if (t.gridPosition == tmp.gridPosition)
+					alleyAmount++;
+			}
+		}
+		float moveScore = 0.5f * AP * TAP * (1 + alleyAmount*0.1f) / (THP * (1 + enemyAmount*0.1f) * Distance);
+		return moveScore;
+
+	}
+
+
 	public override void TurnUpdate ()
 	{
 		if (positionQueue.Count > 0) {
@@ -38,6 +85,29 @@ public class AIPlayer : Player {
 			List<Tile> attacktilesInRange = TileHighlight.FindHighlight(GameManager.instance.map[(int)gridPosition.x][(int)gridPosition.y], attackRange, true);
 			//List<Tile> movementToAttackTilesInRange = TileHighlight.FindHighlight(GameManager.instance.map[(int)gridPosition.x][(int)gridPosition.y], movementPerActionPoint + attackRange);
 			List<Tile> movementTilesInRange = TileHighlight.FindHighlight(GameManager.instance.map[(int)gridPosition.x][(int)gridPosition.y], movementPerActionPoint + 1000);
+
+			//new strategy
+			float maxattScore = 0;
+			string maxattIndexname = "";
+			float maxmoveScore = 0;
+			string maxmoveIndexname = "";
+			foreach (Player tmp in GameManager.instance.players.Where(x => x.GetType() != typeof(AIPlayer))) {
+				tmp.myattScore = attackScore (tmp, 3);
+				if (tmp.myattScore > maxattScore) {
+					maxattScore = tmp.myattScore;
+					maxattIndexname = tmp.playerName;
+				}
+				tmp.mymoveScore = moveScore (tmp, 3);
+				if (tmp.mymoveScore > maxmoveScore) {
+					maxmoveScore = tmp.mymoveScore;
+					maxmoveIndexname = tmp.playerName;
+				}
+			}
+			Debug.Log (maxattScore);
+			Debug.Log (maxattIndexname);
+			Debug.Log (maxmoveScore);
+			Debug.Log (maxmoveIndexname);
+
 			//attack if in range and with lowest HP
 			if (attacktilesInRange.Where(x => GameManager.instance.players.Where (y => y.GetType() != typeof(AIPlayer) && y.HP > 0 && y != this && y.gridPosition == x.gridPosition).Count() > 0).Count () > 0) {
 				var opponentsInRange = attacktilesInRange.Select(x => GameManager.instance.players.Where (y => y.GetType() != typeof(AIPlayer) && y.HP > 0 && y != this && y.gridPosition == x.gridPosition).Count () > 0 ? GameManager.instance.players.Where(y => y.gridPosition == x.gridPosition).First() : null).ToList();
@@ -47,7 +117,8 @@ public class AIPlayer : Player {
 				moving = false;
 				attacking = true;
 				GameManager.instance.highlightTilesAt(gridPosition, Color.red, attackRange);
-
+				//System.Threading.Thread.Sleep(5000);
+				//base.TurnOnGUI ();
 				GameManager.instance.attackWithCurrentPlayer(GameManager.instance.map[(int)opponent.gridPosition.x][(int)opponent.gridPosition.y]);
 			}
 			//move toward nearest attack range of opponent

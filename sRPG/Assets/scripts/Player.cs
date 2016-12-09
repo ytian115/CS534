@@ -31,6 +31,10 @@ public class Player : MonoBehaviour {
 	public int baseDamageBase = 0;
 	public int baseDamageRollSides = 1; //d6
 
+	//add in 1209
+	public float myattScore = 0;
+	public float mymoveScore = 0;
+
 	public int damageReduction {
 		get {
 			int ret = baseDamageReduction;

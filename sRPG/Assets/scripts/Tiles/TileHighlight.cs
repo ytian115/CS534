@@ -72,6 +72,8 @@ public class TileHighlight {
 				//tmpTile.gridPosition.x = i;
 				//tmpTile.gridPosition.y = j;
 				tmpTile = GameManager.instance.map[i][j];
+				if (staticRange)
+					tmpTile.movementCost = 1;
 				if ((originTile.gridPosition.x == tmpTile.gridPosition.x) && (originTile.gridPosition.y == tmpTile.gridPosition.y))
 					continue;
 				
@@ -99,8 +101,8 @@ public class TileHighlight {
 		//while (currentTile.path[i] != null) {
 			realCost += currentTile.path [i].movementCost;
 		}
-		Debug.Log (currentTile.gridPosition);
-		if (realCost > 0) Debug.Log (realCost);
+		//Debug.Log (currentTile.gridPosition);
+		//if (realCost > 0) Debug.Log (realCost);
 		return realCost;
 	}
 
@@ -162,4 +164,9 @@ public class TileHighlight {
 		//did not find a path
 		return null;
 	}
+
+//	public static List<Tile> findAttackRange()
+//	{
+//		
+//	}
 }
