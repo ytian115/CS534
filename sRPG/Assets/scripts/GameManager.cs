@@ -61,7 +61,6 @@ public class GameManager : MonoBehaviour {
 		
 		foreach (Tile t in highlightedTiles) {
 			t.visual.transform.GetComponent<Renderer>().materials[0].color = highlightColor;
-//			Debug.Log("draw the range");
 		}
 	}
 	
