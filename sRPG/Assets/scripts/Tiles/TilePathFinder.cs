@@ -9,55 +9,72 @@ public class TilePathFinder : MonoBehaviour {
 	}
 
 	public static List<Tile> FindPath(Tile startTile, Tile targetTile, Vector2[] occupied) {
-		return targetTile.path;
-		List<Tile> openSet = new List<Tile> ();
-		HashSet<Tile> closedSet = new HashSet<Tile> ();
-		openSet.Add (startTile);
 
-		while (openSet.Count > 0) {
-			Tile currentTile = openSet [0];
-			for (int i = 1; i < openSet.Count; i++) {
-				if (openSet [i].fCost < currentTile.fCost || openSet [i].fCost == currentTile.fCost && openSet [i].hCost < currentTile.hCost) {
-					currentTile = openSet [i];
-				}
-			}
-			//remove current from Openlist and add it to Closelist
-			openSet.Remove (currentTile);
-			closedSet.Add (currentTile);
+		//Player tmpPlayer = (Player) GameManager.instance.players.Where(x => x.gridPosition == startTile.gridPosition);
+//		if (occupied.Contains (targetTile)) {
+			//path2target.RemoveAt (path2target.Count - 1);
 
-			if (currentTile = targetTile) {
-				//find the path from startTile by using tile.parent
-				Tile tmpcurTile = currentTile;
-				List<Tile> tmppath = new List<Tile> ();
-				while (tmpcurTile.parent != startTile) {
-					tmppath.Add (tmpcurTile);
-					tmpcurTile = tmpcurTile.parent;
-				}
-				tmppath.Add (startTile);
-				tmppath.Reverse();
+//		}
+		List<Tile> path2target = TileHighlight.AstarFindpath (startTile, targetTile, occupied);
+//		if (targetTile.cost <= tmpPlayer.movementPerActionPoint) {
+//			return targetTile.parent.path;
+//		}
+//		else {
+		//path2target.RemoveAt(path2target.Count - 1);
+		return path2target;
+//		}
 
-				//targetTile.path = tmppath;
 
-				return tmppath;
-			}
 
-			foreach (Tile neighbor in currentTile.neighbors) {
-				if (neighbor.impassible || closedSet.Contains(neighbor) || occupied.Contains(neighbor.gridPosition)) continue;
 
-				int newMovecost2Neighbor = currentTile.gCost + GetDistance (currentTile, neighbor);
-				if (newMovecost2Neighbor < neighbor.gCost || !openSet.Contains (neighbor)) {
-					neighbor.gCost = newMovecost2Neighbor;
-					neighbor.hCost = GetDistance (neighbor, targetTile);
-					neighbor.parent = currentTile;
-
-					if (!openSet.Contains (neighbor))
-						openSet.Add (neighbor);
-				}
-			}
-		}//end while
-
-		//did not find a path
-		return null;
+//		List<Tile> openSet = new List<Tile> ();
+//		HashSet<Tile> closedSet = new HashSet<Tile> ();
+//		openSet.Add (startTile);
+//
+//		while (openSet.Count > 0) {
+//			Tile currentTile = openSet [0];
+//			for (int i = 1; i < openSet.Count; i++) {
+//				if (openSet [i].fCost < currentTile.fCost || openSet [i].fCost == currentTile.fCost && openSet [i].hCost < currentTile.hCost) {
+//					currentTile = openSet [i];
+//				}
+//			}
+//			//remove current from Openlist and add it to Closelist
+//			openSet.Remove (currentTile);
+//			closedSet.Add (currentTile);
+//
+//			if (currentTile = targetTile) {
+//				//find the path from startTile by using tile.parent
+//				Tile tmpcurTile = currentTile;
+//				List<Tile> tmppath = new List<Tile> ();
+//				while (tmpcurTile.parent != startTile) {
+//					tmppath.Add (tmpcurTile);
+//					tmpcurTile = tmpcurTile.parent;
+//				}
+//				tmppath.Add (startTile);
+//				tmppath.Reverse();
+//
+//				//targetTile.path = tmppath;
+//
+//				return tmppath;
+//			}
+//
+//			foreach (Tile neighbor in currentTile.neighbors) {
+//				if (neighbor.impassible || closedSet.Contains(neighbor) || occupied.Contains(neighbor.gridPosition)) continue;
+//
+//				int newMovecost2Neighbor = currentTile.gCost + GetDistance (currentTile, neighbor);
+//				if (newMovecost2Neighbor < neighbor.gCost || !openSet.Contains (neighbor)) {
+//					neighbor.gCost = newMovecost2Neighbor;
+//					neighbor.hCost = GetDistance (neighbor, targetTile);
+//					neighbor.parent = currentTile;
+//
+//					if (!openSet.Contains (neighbor))
+//						openSet.Add (neighbor);
+//				}
+//			}
+//		}//end while
+//
+//		//did not find a path
+//		return null;
 	}
 
 //	public static List<Tile> FindPath(Tile originTile, Tile destinationTile, Vector2[] occupied) {
