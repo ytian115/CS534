@@ -77,7 +77,7 @@ public class TileHighlight {
 					continue;
 				List<Tile> path = new List<Tile>();
 //				Debug.Log ("enter a star");
-				tmpTile.path = AstarFindpath (originTile, tmpTile); // a star return a path.
+				tmpTile.path = AstarFindpath (originTile, tmpTile,occupied); // a star return a path.
 				tmpTile.cost = GetCost(tmpTile);
 				if(tmpTile.cost <= movementPoints)
 				{
@@ -118,7 +118,7 @@ public class TileHighlight {
 	}
 
 	//find path by using Astar
-	public static List<Tile> AstarFindpath(Tile startTile, Tile targetTile) {
+	public static List<Tile> AstarFindpath(Tile startTile, Tile targetTile,Vector2[] occupied) {
 		List<Tile> openSet = new List<Tile> ();
 		HashSet<Tile> closedSet = new HashSet<Tile> ();
 		openSet.Add (startTile);
@@ -153,7 +153,7 @@ public class TileHighlight {
 			}
 			currentTile.generateNeighbors ();
 			foreach (Tile neighbor in currentTile.neighbors) {
-				if (neighbor.impassible || closedSet.Contains(neighbor)) continue;
+				if (neighbor.impassible || closedSet.Contains(neighbor) || occupied.Contains(neighbor.gridPosition)) continue;
 
 //				int newMovecost2Neighbor = currentTile.gCost + GetDistance (currentTile, neighbor);
 				int newMovecost2Neighbor = currentTile.gCost + neighbor.movementCost;

@@ -1,0 +1,17 @@
+/Users/Ye/git/CS534/sRPG/Temp/bin/Debug/UnityEngine.dll
+/Users/Ye/git/CS534/sRPG/Temp/bin/Debug/UnityEditor.dll
+/Users/Ye/git/CS534/sRPG/Temp/bin/Debug/UnityEngine.Networking.dll
+/Users/Ye/git/CS534/sRPG/Temp/bin/Debug/UnityEngine.UI.dll
+/Users/Ye/git/CS534/sRPG/Temp/bin/Debug/Mono.Cecil.dll
+/Users/Ye/git/CS534/sRPG/Temp/bin/Debug/Unity.SerializationLogic.dll
+/Users/Ye/git/CS534/sRPG/Temp/bin/Debug/Unity.DataContract.dll
+/Users/Ye/git/CS534/sRPG/Temp/bin/Debug/ICSharpCode.NRefactory.dll
+/Users/Ye/git/CS534/sRPG/Temp/bin/Debug/Unity.UNetWeaver.dll
+/Users/Ye/git/CS534/sRPG/Temp/bin/Debug/Unity.UNetWeaver.dll.mdb
+/Users/Ye/git/CS534/sRPG/Temp/bin/Debug/Unity.CecilTools.dll
+/Users/Ye/git/CS534/sRPG/Temp/bin/Debug/Mono.Cecil.Pdb.dll
+/Users/Ye/git/CS534/sRPG/Temp/bin/Debug/Mono.Cecil.Mdb.dll
+/Users/Ye/git/CS534/sRPG/Temp/bin/Debug/Assembly-CSharp.dll.mdb
+/Users/Ye/git/CS534/sRPG/Temp/bin/Debug/Assembly-CSharp.dll
+/Users/Ye/git/CS534/sRPG/obj/Debug/Assembly-CSharp.dll
+/Users/Ye/git/CS534/sRPG/obj/Debug/Assembly-CSharp.dll.mdb
