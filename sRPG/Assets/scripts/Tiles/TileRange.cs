@@ -14,8 +14,8 @@ public class TileRange : MonoBehaviour {
 	
 	}
 
-<<<<<<< HEAD
-=======
+//<<<<<<< HEAD
+//=======
 	public List<Tile> Findpath(Tile startTile, Tile targetTile) {
 		List<Tile> openSet = new List<Tile> ();
 		HashSet<Tile> closedSet = new HashSet<Tile> ();
@@ -49,7 +49,7 @@ public class TileRange : MonoBehaviour {
 
 	}
 
->>>>>>> master
+//>>>>>>> master
     public static List<Tile> FindHighlight(Tile originTile, int movementPoints, Vector2[] occupied, bool staticRange)
     {
         List<Tile> closed = new List<Tile>();
@@ -80,9 +80,9 @@ public class TileRange : MonoBehaviour {
 
         return result;
     }
-<<<<<<< HEAD
-=======
-
-
->>>>>>> master
+//<<<<<<< HEAD
+//=======
+//
+//
+//>>>>>>> master
 }
