@@ -22,8 +22,8 @@ public class Tile : MonoBehaviour {
 
     public int cost = 0 ;     //  999999?
 
-	public int gCost;
-	public int hCost;
+	public int gCost =0;
+	public int hCost =0 ;
 	public int fCost {
 		get {
 			return gCost + hCost;
