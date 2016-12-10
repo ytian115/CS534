@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading; 
 
 public class AIPlayer : Player {
 
@@ -46,7 +47,9 @@ public class AIPlayer : Player {
 		Tile tmpTile = GameManager.instance.map [(int)opponent.gridPosition.x] [(int)opponent.gridPosition.y];
 		Tile originTile = GameManager.instance.map [(int)base.gridPosition.x] [(int)base.gridPosition.y];
 		List<Tile> path = new List<Tile>();
-		tmpTile.path = TileHighlight.AstarFindpath (originTile, tmpTile, GameManager.instance.players.Where(x => x.gridPosition != gridPosition).Select(x => x.gridPosition).ToArray()); // a star return a path.
+//		tmpTile.path = TileHighlight.AstarFindpath (originTile, tmpTile, GameManager.instance.players.Where(x => x.gridPosition != gridPosition).Select(x => x.gridPosition).ToArray()); // a star return a path.
+		tmpTile.path = TilePathFinder.FindPath (originTile,tmpTile, GameManager.instance.players.Where(x => x.gridPosition != gridPosition && x.gridPosition != opponent.gridPosition).Select(x => x.gridPosition).ToArray());
+
 		int Distance = TileHighlight.GetCost(tmpTile);
 		List<Tile> nearbyTiles= TileHighlight.FindHighlight (GameManager.instance.map [(int)opponent.gridPosition.x] [(int)opponent.gridPosition.y], specialRange, true);
 		int alleyAmount = 0;
@@ -61,7 +64,7 @@ public class AIPlayer : Player {
 					alleyAmount++;
 			}
 		}
-		float moveScore = 0.5f * AP * TAP * (1 + alleyAmount*0.1f) / (THP * (1 + enemyAmount*0.1f) * Distance);
+		float moveScore = 0.3f * AP * TAP * (1 + alleyAmount*0.1f) / (THP * (1 + enemyAmount*0.1f) * 2 * Distance);
 		return moveScore;
 
 	}
@@ -111,7 +114,9 @@ public class AIPlayer : Player {
 			//attack if in range and with lowest HP
 			if (attacktilesInRange.Where(x => GameManager.instance.players.Where (y => y.GetType() != typeof(AIPlayer) && y.HP > 0 && y != this && y.gridPosition == x.gridPosition).Count() > 0).Count () > 0) {
 				var opponentsInRange = attacktilesInRange.Select(x => GameManager.instance.players.Where (y => y.GetType() != typeof(AIPlayer) && y.HP > 0 && y != this && y.gridPosition == x.gridPosition).Count () > 0 ? GameManager.instance.players.Where(y => y.gridPosition == x.gridPosition).First() : null).ToList();
-				Player opponent = opponentsInRange.OrderBy (x => x != null ? -x.HP : 1000).First ();
+
+//				Player opponent = opponentsInRange.OrderBy (x => x != null ? -x.HP : 1000).First ();
+				Player opponent = opponentsInRange.OrderBy (x => x != null? -x.myattScore : 1000).First ();
 
 				GameManager.instance.removeTileHighlights();
 				moving = false;
@@ -137,22 +142,35 @@ public class AIPlayer : Player {
 //				}
 //			}
 			//move toward nearest opponent
-			else if (!moving && movementTilesInRange.Where(x => GameManager.instance.players.Where (y => y.GetType() != typeof(AIPlayer) && y.HP > 0 && y != this && y.gridPosition == x.gridPosition).Count() > 0).Count () > 0) {
+			else if (!moving && movementTilesInRange.Where(x => GameManager.instance.players.Where (y => y.GetType() != typeof(AIPlayer) && y.HP > 0 && y != this && y.gridPosition == x.gridPosition).Count() > 0).Count () > 0) 
+			{
 				var opponentsInRange = movementTilesInRange.Select(x => GameManager.instance.players.Where (y => y.GetType() != typeof(AIPlayer) && y.HP > 0 && y != this && y.gridPosition == x.gridPosition).Count () > 0 ? GameManager.instance.players.Where(y => y.gridPosition == x.gridPosition).First() : null).ToList();
-				Player opponent = opponentsInRange.OrderBy (x => x != null ? -x.HP : 1000).ThenBy (x => x != null ? TilePathFinder.FindPath(GameManager.instance.map[(int)gridPosition.x][(int)gridPosition.y],GameManager.instance.map[(int)x.gridPosition.x][(int)x.gridPosition.y]).Count() : 1000).First ();
+//				Player opponent = opponentsInRange.OrderBy (x => x != null ? -x.HP : 1000).ThenBy (x => x != null ? TilePathFinder.FindPath(GameManager.instance.map[(int)gridPosition.x][(int)gridPosition.y],GameManager.instance.map[(int)x.gridPosition.x][(int)x.gridPosition.y]).Count() : 1000).First ();
+
+				Player opponent = opponentsInRange.OrderBy (x => x != null? -x.mymoveScore : 1000).First ();
 
 				GameManager.instance.removeTileHighlights();
 				moving = true;
 				attacking = false;
 				GameManager.instance.highlightTilesAt(gridPosition, Color.blue, movementPerActionPoint, false);
 				
+//				List<Tile> path = TilePathFinder.FindPath (GameManager.instance.map[(int)gridPosition.x][(int)gridPosition.y],GameManager.instance.map[(int)opponent.gridPosition.x][(int)opponent.gridPosition.y], GameManager.instance.players.Where(x => x.gridPosition != gridPosition && x.gridPosition != opponent.gridPosition).Select(x => x.gridPosition).ToArray());
+//				if (path.Count() > 1) 
+//				{
+//					List<Tile> actualMovement = TileHighlight.FindHighlight(GameManager.instance.map[(int)gridPosition.x][(int)gridPosition.y], movementPerActionPoint, GameManager.instance.players.Where(x => x.gridPosition != gridPosition).Select(x => x.gridPosition).ToArray());
+//					path.Reverse();
+//					if (path.Where(x => actualMovement.Contains(x)).Count() > 0) GameManager.instance.moveCurrentPlayer(path.Where (x => actualMovement.Contains(x)).First());
+//				}
 				List<Tile> path = TilePathFinder.FindPath (GameManager.instance.map[(int)gridPosition.x][(int)gridPosition.y],GameManager.instance.map[(int)opponent.gridPosition.x][(int)opponent.gridPosition.y], GameManager.instance.players.Where(x => x.gridPosition != gridPosition && x.gridPosition != opponent.gridPosition).Select(x => x.gridPosition).ToArray());
-				if (path.Count() > 1) {
+				if (path.Count() > 1) 
+				{
 					List<Tile> actualMovement = TileHighlight.FindHighlight(GameManager.instance.map[(int)gridPosition.x][(int)gridPosition.y], movementPerActionPoint, GameManager.instance.players.Where(x => x.gridPosition != gridPosition).Select(x => x.gridPosition).ToArray());
 					path.Reverse();
 					if (path.Where(x => actualMovement.Contains(x)).Count() > 0) GameManager.instance.moveCurrentPlayer(path.Where (x => actualMovement.Contains(x)).First());
 				}
 			}
+//			Thread.Sleep(2000);
+
 		}
 
 //		if (!attacking && !moving) {
@@ -165,10 +183,12 @@ public class AIPlayer : Player {
 			moving = false;
 			attacking = false;			
 		}
+
 		base.TurnUpdate ();
 	}
 	
 	public override void TurnOnGUI () {
 		base.TurnOnGUI ();
 	}
+
 }

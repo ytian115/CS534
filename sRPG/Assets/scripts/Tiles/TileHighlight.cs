@@ -19,6 +19,16 @@ public class TileHighlight {
 		return FindHighlight(originTile, movementPoints, occupied, false);
 	}
 
+	public static List<Tile> findRange(Tile originTile, int movementPoints ){
+		return findRange (originTile, movementPoints, new Vector2[0],false);
+	}
+	public static List<Tile> findRange(Tile originTile, int movementPoints, bool staticRange ){
+		return findRange (originTile, movementPoints, new Vector2[0],staticRange);
+	}
+	public static List<Tile> findRange(Tile originTile, int movementPoints, Vector2[] occupied ){
+		return findRange (originTile, movementPoints, occupied,false);
+	}
+
 //	public static List<Tile> FindHighlight(Tile originTile, int movementPoints, Vector2[] occupied, bool staticRange) {
 //		List<Tile> closed = new List<Tile>();
 //		List<TilePath> open = new List<TilePath>();
@@ -165,6 +175,73 @@ public class TileHighlight {
 		return null;
 	}
 
+	public static List<Tile> findRange(Tile startTile,int movementPoints,Vector2[] occupied,bool staticRange)
+	{
+
+		startTile.cost = 0;
+
+		// need to initial the tile cost value (all set to 999 except for itself to 0);
+		Debug.Log ("enter my find range");
+		float leftMax = Mathf.Max(startTile.gridPosition.x - movementPoints, 0) ;
+		float rightMax = Mathf.Min(startTile.gridPosition.x + movementPoints, GameManager.instance.mapSize -1);
+		float upMax = Mathf.Max(startTile.gridPosition.y - movementPoints, 0);
+		float downMax = Mathf.Min(startTile.gridPosition.y + movementPoints, GameManager.instance.mapSize - 1);
+		List<Tile> result = new List <Tile> ();
+		List<Tile> openSet = new List<Tile> ();
+		List<Tile> range = new List<Tile> ();
+		//		List<Tile> closeSet = new List<Tile> ();
+		HashSet<Tile> closedSet = new HashSet<Tile> ();
+		for (int i = (int)leftMax; i <= (int)rightMax; i++) {
+			for (int j = (int)upMax; j <= (int)downMax; j++) {
+				Tile tmpTile = new Tile ();
+				//tmpTile.gridPosition.x = i;
+				//tmpTile.gridPosition.y = j;
+				tmpTile = GameManager.instance.map [i] [j];
+
+				if (startTile.gridPosition == tmpTile.gridPosition)
+					continue;
+				else {
+					tmpTile.cost = 9999;
+					range.Add (tmpTile);
+				}
+			}
+		}
+
+		openSet.Add (startTile);
+
+		while (openSet.Count > 0) {
+			Tile currentTile = openSet [0];
+
+			openSet.Remove (currentTile);
+			closedSet.Add (currentTile);
+			currentTile.generateNeighbors ();
+			List<Tile> neighbors = new List<Tile> ();
+			neighbors = currentTile.neighbors;
+
+			foreach( Tile neighbor in neighbors)
+			{
+				if (neighbor.impassible || closedSet.Contains(neighbor) || occupied.Contains (neighbor.gridPosition)||!range.Contains(neighbor))
+					continue;
+				if (currentTile.cost + neighbor.movementCost < neighbor.cost) {
+					neighbor.cost = currentTile.cost + neighbor.movementCost;
+				} 
+
+				if (!openSet.Contains (neighbor)) {
+					openSet.Add (neighbor);
+				}
+				if (neighbor.cost <=movementPoints)
+					result.Add (neighbor);
+			}
+
+		}
+
+		foreach(Tile re in result){
+			Debug.Log (re.gridPosition);
+			Debug.Log (re.cost);
+		}
+		return result;
+	}
+		
 //	public static List<Tile> findAttackRange()
 //	{
 //		

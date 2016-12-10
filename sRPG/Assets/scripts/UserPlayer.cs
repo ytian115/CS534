@@ -90,4 +90,13 @@ public class UserPlayer : Player {
 		
 		base.TurnOnGUI ();
 	}
+	public void OnGUI() {
+		//display HP
+		Vector3 locationHp = Camera.main.WorldToScreenPoint(transform.position) + Vector3.up * 35;
+		GUI.TextArea(new Rect(locationHp.x, Screen.height - locationHp.y, 30, 20), HP.ToString());
+		Vector3 locationMove = Camera.main.WorldToScreenPoint(transform.position) + Vector3.up * 55;
+		GUI.TextArea(new Rect(locationMove.x, Screen.height - locationMove.y, 60, 20), "M:"+mymoveScore.ToString());
+		Vector3 locationAtt = Camera.main.WorldToScreenPoint(transform.position) + Vector3.up * 75;
+		GUI.TextArea(new Rect(locationAtt.x, Screen.height - locationAtt.y, 60, 20), "A:"+myattScore.ToString());
+	}
 }

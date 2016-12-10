@@ -56,8 +56,8 @@ public class GameManager : MonoBehaviour {
 
 		List <Tile> highlightedTiles = new List<Tile>();
 
-		if (ignorePlayers) highlightedTiles = TileHighlight.FindHighlight(map[(int)originLocation.x][(int)originLocation.y], distance, highlightColor == Color.red);
-		else highlightedTiles = TileHighlight.FindHighlight(map[(int)originLocation.x][(int)originLocation.y], distance, players.Where(x => x.gridPosition != originLocation).Select(x => x.gridPosition).ToArray(), highlightColor == Color.red);
+		if (ignorePlayers) highlightedTiles = TileHighlight.findRange(map[(int)originLocation.x][(int)originLocation.y], distance, highlightColor == Color.red);
+		else highlightedTiles = TileHighlight.findRange(map[(int)originLocation.x][(int)originLocation.y], distance, players.Where(x => x.gridPosition != originLocation).Select(x => x.gridPosition).ToArray(), highlightColor == Color.red);
 		
 		foreach (Tile t in highlightedTiles) {
 			t.visual.transform.GetComponent<Renderer>().materials[0].color = highlightColor;
@@ -172,8 +172,8 @@ public class GameManager : MonoBehaviour {
 	void generatePlayers() {
 		UserPlayer player;
 		
-		player = ((GameObject)Instantiate(UserPlayerPrefab, new Vector3(0 - Mathf.Floor(mapSize/2),1.5f, -0 + Mathf.Floor(mapSize/2)), Quaternion.Euler(new Vector3()))).GetComponent<UserPlayer>();
-		player.gridPosition = new Vector2(0,0);
+		player = ((GameObject)Instantiate(UserPlayerPrefab, new Vector3(2 - Mathf.Floor(mapSize/2),1.5f, -2 + Mathf.Floor(mapSize/2)), Quaternion.Euler(new Vector3()))).GetComponent<UserPlayer>();
+		player.gridPosition = new Vector2(2,2);
 		player.playerName = "Bob";
 		player.headArmor = Armor.FromKey(ArmorKey.LeatherCap);
 		player.chestArmor = Armor.FromKey(ArmorKey.MagicianCloak);
@@ -205,7 +205,7 @@ public class GameManager : MonoBehaviour {
 		player.handWeapons.Add(Weapon.FromKey(WeaponKey.LongBow));
 		
 		players.Add(player);
-		
+
 		AIPlayer aiplayer = ((GameObject)Instantiate(AIPlayerPrefab, new Vector3(6 - Mathf.Floor(mapSize/2),1.5f, -4 + Mathf.Floor(mapSize/2)), Quaternion.Euler(new Vector3()))).GetComponent<AIPlayer>();
 		aiplayer.gridPosition = new Vector2(6,4);
 		aiplayer.playerName = "Bot1";
