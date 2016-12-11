@@ -82,6 +82,7 @@ public class Tile : MonoBehaviour {
 		if (Application.loadedLevelName == "gameScene") {
 			if (GameManager.instance.players[GameManager.instance.currentPlayerIndex].moving) {
 				GameManager.instance.moveCurrentPlayer(this);
+				GameManager.instance.removeTileHighlights();
 			} else if (GameManager.instance.players[GameManager.instance.currentPlayerIndex].attacking) {
 				GameManager.instance.attackWithCurrentPlayer(this);
 			} else {

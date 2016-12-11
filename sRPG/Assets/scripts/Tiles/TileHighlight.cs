@@ -181,7 +181,7 @@ public class TileHighlight {
 		startTile.cost = 0;
 
 		// need to initial the tile cost value (all set to 999 except for itself to 0);
-		Debug.Log ("enter my find range");
+//		Debug.Log ("enter my find range");
 		float leftMax = Mathf.Max(startTile.gridPosition.x - movementPoints, 0) ;
 		float rightMax = Mathf.Min(startTile.gridPosition.x + movementPoints, GameManager.instance.mapSize -1);
 		float upMax = Mathf.Max(startTile.gridPosition.y - movementPoints, 0);
@@ -235,10 +235,10 @@ public class TileHighlight {
 
 		}
 
-		foreach(Tile re in result){
-			Debug.Log (re.gridPosition);
-			Debug.Log (re.cost);
-		}
+//		foreach(Tile re in result){
+//			Debug.Log (re.gridPosition);
+//			Debug.Log (re.cost);
+//		}
 		return result;
 	}
 		

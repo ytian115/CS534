@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading; 
 
 public class GameManager : MonoBehaviour {
 	public static GameManager instance;
@@ -62,6 +63,7 @@ public class GameManager : MonoBehaviour {
 		foreach (Tile t in highlightedTiles) {
 			t.visual.transform.GetComponent<Renderer>().materials[0].color = highlightColor;
 		}
+		Debug.Log("function active");
 	}
 	
 	public void removeTileHighlights() {
@@ -74,7 +76,7 @@ public class GameManager : MonoBehaviour {
  	
 	public void moveCurrentPlayer(Tile destTile) {
 		if (destTile.visual.transform.GetComponent<Renderer>().materials[0].color != Color.white && !destTile.impassible && players[currentPlayerIndex].positionQueue.Count == 0) {
-			removeTileHighlights();
+//			removeTileHighlights();
 			players[currentPlayerIndex].moving = false;
 			foreach(Tile t in TilePathFinder.FindPath(map[(int)players[currentPlayerIndex].gridPosition.x][(int)players[currentPlayerIndex].gridPosition.y],destTile, players.Where(x => x.gridPosition != destTile.gridPosition && x.gridPosition != players[currentPlayerIndex].gridPosition).Select(x => x.gridPosition).ToArray())) {
 				players[currentPlayerIndex].positionQueue.Add(map[(int)t.gridPosition.x][(int)t.gridPosition.y].transform.position + 1.5f * Vector3.up);
