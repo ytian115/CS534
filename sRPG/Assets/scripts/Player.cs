@@ -75,6 +75,20 @@ public class Player : MonoBehaviour {
 		}
 		set {}
 	}
+	public int attPower {
+		get {
+			int ret = baseDamageBase;
+			foreach (Weapon w in handWeapons) {
+				if (w != null) {
+					ret += w.alterDamageBase;
+					if (w.type == WeaponSlotType.TwoHanded) break;  
+				}
+			}
+
+			return ret;
+		}
+		set {}
+	}
 	public float damageRollSides {
 		get {
 			int ret = baseDamageRollSides;
