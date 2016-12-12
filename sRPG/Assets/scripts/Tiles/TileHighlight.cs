@@ -211,6 +211,7 @@ public class TileHighlight {
 
 		while (openSet.Count > 0) {
 			Tile currentTile = openSet [0];
+//			Tile currentTile = openSet.OrderBy(x=>x.cost).First();
 
 			openSet.Remove (currentTile);
 			closedSet.Add (currentTile);

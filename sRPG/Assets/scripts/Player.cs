@@ -212,6 +212,7 @@ public class Player : MonoBehaviour {
 	}
 	
 	public virtual void TurnUpdate () {
+
 		if (actionPoints <= 0) {
 			actionPoints = 2;
 			moving = false;

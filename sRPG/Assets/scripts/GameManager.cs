@@ -180,6 +180,7 @@ public class GameManager : MonoBehaviour {
 		player.headArmor = Armor.FromKey(ArmorKey.LeatherCap);
 		player.chestArmor = Armor.FromKey(ArmorKey.MagicianCloak);
 		player.handWeapons.Add(Weapon.FromKey(WeaponKey.LongSword));
+		player.baseMovementPerActionPoint = 10;
 		
 		players.Add(player);
 		
@@ -194,6 +195,7 @@ public class GameManager : MonoBehaviour {
 				
 		player = ((GameObject)Instantiate(UserPlayerPrefab, new Vector3(4 - Mathf.Floor(mapSize/2),1.5f, -5 + Mathf.Floor(mapSize/2)), Quaternion.Euler(new Vector3()))).GetComponent<UserPlayer>();
 		player.gridPosition = new Vector2(4,5);
+		player.HP = 4;
 		player.playerName = "Lars";
 		player.chestArmor = Armor.FromKey(ArmorKey.IronPlate);
 		player.handWeapons.Add(Weapon.FromKey(WeaponKey.Warhammer));
