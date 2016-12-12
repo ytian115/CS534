@@ -57,8 +57,8 @@ public class GameManager : MonoBehaviour {
 
 		List <Tile> highlightedTiles = new List<Tile>();
 
-		if (ignorePlayers) highlightedTiles = TileHighlight.findRange(map[(int)originLocation.x][(int)originLocation.y], distance, highlightColor == Color.red);
-		else highlightedTiles = TileHighlight.findRange(map[(int)originLocation.x][(int)originLocation.y], distance, players.Where(x => x.gridPosition != originLocation).Select(x => x.gridPosition).ToArray(), highlightColor == Color.red);
+		if (ignorePlayers) highlightedTiles = TileHighlight.findRange(map[(int)originLocation.x][(int)originLocation.y], distance);
+		else highlightedTiles = TileHighlight.findRange(map[(int)originLocation.x][(int)originLocation.y], distance, players.Where(x => x.gridPosition != originLocation).Select(x => x.gridPosition).ToArray());
 		
 		foreach (Tile t in highlightedTiles) {
 			t.visual.transform.GetComponent<Renderer>().materials[0].color = highlightColor;
@@ -76,7 +76,7 @@ public class GameManager : MonoBehaviour {
  	
 	public void moveCurrentPlayer(Tile destTile) {
 		if (destTile.visual.transform.GetComponent<Renderer>().materials[0].color != Color.white && !destTile.impassible && players[currentPlayerIndex].positionQueue.Count == 0) {
-//			removeTileHighlights();
+			removeTileHighlights();
 			players[currentPlayerIndex].moving = false;
 			foreach(Tile t in TilePathFinder.FindPath(map[(int)players[currentPlayerIndex].gridPosition.x][(int)players[currentPlayerIndex].gridPosition.y],destTile, players.Where(x => x.gridPosition != destTile.gridPosition && x.gridPosition != players[currentPlayerIndex].gridPosition).Select(x => x.gridPosition).ToArray())) {
 				players[currentPlayerIndex].positionQueue.Add(map[(int)t.gridPosition.x][(int)t.gridPosition.y].transform.position + 1.5f * Vector3.up);

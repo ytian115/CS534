@@ -210,7 +210,8 @@ public class TileHighlight {
 		openSet.Add (startTile);
 
 		while (openSet.Count > 0) {
-			Tile currentTile = openSet [0];
+			Tile currentTile = openSet.OrderBy (x => x.cost).First();
+			//Tile currentTile = openSet [0];
 
 			openSet.Remove (currentTile);
 			closedSet.Add (currentTile);
@@ -231,6 +232,8 @@ public class TileHighlight {
 				}
 				if (neighbor.cost <=movementPoints)
 					result.Add (neighbor);
+
+
 			}
 
 		}
