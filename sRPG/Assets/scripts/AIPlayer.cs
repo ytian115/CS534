@@ -30,7 +30,8 @@ public class AIPlayer : Player {
 		float THP = opponent.HP;
 		AP = AP / 12f;
 		THP = THP / 25f;
-		List<Tile> nearbyTiles= TileHighlight.FindHighlight (GameManager.instance.map [(int)opponent.gridPosition.x] [(int)opponent.gridPosition.y], specialRange, true);
+		List<Tile> nearbyTiles= TileHighlight.findRange (GameManager.instance.map [(int)opponent.gridPosition.x] [(int)opponent.gridPosition.y], specialRange, true);
+		List<Tile> inRangeTiles= TileHighlight.findRange (GameManager.instance.map [(int)base.gridPosition.x] [(int)base.gridPosition.y], (int)base.attackRange, true);
 		float amount = 0;
 		foreach (Tile t in nearbyTiles) {
 			foreach (Player tmp in GameManager.instance.players.Where(x => x.GetType() != typeof(UserPlayer))){
@@ -38,8 +39,26 @@ public class AIPlayer : Player {
 					amount = amount + 0.25f;
 			}
 		}
+		int enemyNum = 0;
+		foreach (Tile t in inRangeTiles) {
+			foreach (Player tmp in GameManager.instance.players.Where(x => x.GetType() != typeof(AIPlayer))){
+				if (t.gridPosition != tmp.gridPosition)
+					enemyNum += enemyNum;
+			}
+		}
+		bool InRange = false;
+		foreach (Tile t in inRangeTiles) {
+			if (opponent.gridPosition == t.gridPosition){
+				InRange = true;
+			}
+		}
 
-		float attScore =  (1 + TAP * 1) * (1 + amount * 2) / (1 + THP * 0.7f);
+		float attScore;
+		if (enemyNum == 0 && !InRange ) {
+			attScore = 0;
+		} else { 
+			attScore = (1 + TAP * 1f) * (1 + amount * 1) / (1 + THP * 1f) ;
+		}
 		return attScore;
 	}
 
@@ -50,9 +69,7 @@ public class AIPlayer : Player {
 		float TAP = opponent.attPower/10f;
 		float THP = opponent.HP/25f;
 		float AP = Mathf.Max(0, (float)Mathf.Floor(base.damageBase + Random.Range(0, base.damageRollSides)) - (float)opponent.damageReduction);
-		Debug.Log (AP+"ap");
 		float oneshot  = (float)Mathf.Max (0.0f,(THP *25f- AP));
-		Debug.Log (oneshot+"oneshot");
 		Tile tmpTile = GameManager.instance.map [(int)opponent.gridPosition.x] [(int)opponent.gridPosition.y];
 		Tile originTile = GameManager.instance.map [(int)base.gridPosition.x] [(int)base.gridPosition.y];
 		List<Tile> path = new List<Tile>();
@@ -60,7 +77,7 @@ public class AIPlayer : Player {
 		tmpTile.path = TilePathFinder.FindPath (originTile,tmpTile, GameManager.instance.players.Where(x => x.gridPosition != gridPosition && x.gridPosition != opponent.gridPosition).Select(x => x.gridPosition).ToArray());
 
 		int Distance = TileHighlight.GetCost(tmpTile);
-		List<Tile> nearbyTiles= TileHighlight.FindHighlight (GameManager.instance.map [(int)opponent.gridPosition.x] [(int)opponent.gridPosition.y], specialRange, true);
+		List<Tile> nearbyTiles= TileHighlight.findRange (GameManager.instance.map [(int)opponent.gridPosition.x] [(int)opponent.gridPosition.y], specialRange, true);
 		float alleyAmount = 0;
 		float enemyAmount = 0;
 		foreach (Tile t in nearbyTiles) {
@@ -74,11 +91,10 @@ public class AIPlayer : Player {
 			}
 		}
 		float moveScore;
-		float attScore;
 		if (oneshot <= 0)
-			moveScore = 0.3f * TAP * (1 + alleyAmount*0.1f) / ((1 + THP * 0.8f) * (1 + enemyAmount*0.1f) * 1 * (Distance))+1.0f;  
+			moveScore = (1 +0.3f * TAP) * (1 + alleyAmount*0.1f) / ((1 + THP * 0.8f) * (1 + enemyAmount*0.1f) * 0.7f * (Distance))+2f;  
 		else
-			moveScore = 0.3f * TAP * (1 + alleyAmount*0.1f) / (THP * (1 + enemyAmount*0.1f) * 1 * (Distance));
+			moveScore = (1 +0.3f * TAP) * TAP * (1 + alleyAmount*0.1f) / ((1 + THP * 0.8f) * (1 + enemyAmount*0.1f) * 0.7f * (Distance))+1f;
 		return moveScore;
 
 	}
@@ -99,9 +115,9 @@ public class AIPlayer : Player {
 			
 		} else {
 			//priority queue
-			List<Tile> attacktilesInRange = TileHighlight.FindHighlight(GameManager.instance.map[(int)gridPosition.x][(int)gridPosition.y], attackRange, true);
-			//List<Tile> movementToAttackTilesInRange = TileHighlight.FindHighlight(GameManager.instance.map[(int)gridPosition.x][(int)gridPosition.y], movementPerActionPoint + attackRange);
-			List<Tile> movementTilesInRange = TileHighlight.FindHighlight(GameManager.instance.map[(int)gridPosition.x][(int)gridPosition.y], movementPerActionPoint + 1000);
+			List<Tile> attacktilesInRange = TileHighlight.findRange(GameManager.instance.map[(int)gridPosition.x][(int)gridPosition.y], attackRange, true);
+			//List<Tile> movementToAttackTilesInRange = TileHighlight.findRange(GameManager.instance.map[(int)gridPosition.x][(int)gridPosition.y], movementPerActionPoint + attackRange);
+			List<Tile> movementTilesInRange = TileHighlight.findRange(GameManager.instance.map[(int)gridPosition.x][(int)gridPosition.y], movementPerActionPoint + 1000);
 
 			//new strategy
 			float maxattScore = 0;
@@ -120,10 +136,6 @@ public class AIPlayer : Player {
 					maxmoveIndexname = tmp.playerName;
 				}
 			}
-			Debug.Log (maxattScore);
-			Debug.Log (maxattIndexname);
-			Debug.Log (maxmoveScore);
-			Debug.Log (maxmoveIndexname);
 
 			var opponentsInattRange = attacktilesInRange.Select(x => GameManager.instance.players.Where (y => y.GetType() != typeof(AIPlayer) && y.HP > 0 && y != this && y.gridPosition == x.gridPosition).Count () > 0 ? GameManager.instance.players.Where(y => y.gridPosition == x.gridPosition).First() : null).ToList();
 
@@ -138,9 +150,9 @@ public class AIPlayer : Player {
 			bool isTheattTarget = false;
 
 			Debug.Log (moveopponent.mymoveScore);
-			if ((attopponent != null) && (attopponent.myattScore >= moveopponent.mymoveScore))
+			if (((attopponent != null) && (attopponent.myattScore >= moveopponent.mymoveScore))||attopponent == moveopponent)
 				isTheattTarget = true;
-
+			Thread.Sleep(2000);
 			//attack if in range and with lowest HP
 			if (isTheattTarget && attacktilesInRange.Where(x => GameManager.instance.players.Where (y => y.GetType() != typeof(AIPlayer) && y.HP > 0 && y != this && y.gridPosition == x.gridPosition).Count() > 0).Count () > 0) {
 //				GameManager.instance.removeTileHighlights();
@@ -177,7 +189,7 @@ public class AIPlayer : Player {
 //				Thread.Sleep(2000);
 				List<Tile> path = TilePathFinder.FindPath (GameManager.instance.map[(int)gridPosition.x][(int)gridPosition.y],GameManager.instance.map[(int)moveopponent.gridPosition.x][(int)moveopponent.gridPosition.y], GameManager.instance.players.Where(x => x.gridPosition != gridPosition && x.gridPosition != moveopponent.gridPosition).Select(x => x.gridPosition).ToArray());
 				if (path.Count () > 1) {
-					List<Tile> actualMovement = TileHighlight.FindHighlight (GameManager.instance.map [(int)gridPosition.x] [(int)gridPosition.y], movementPerActionPoint, GameManager.instance.players.Where (x => x.gridPosition != gridPosition).Select (x => x.gridPosition).ToArray ());
+					List<Tile> actualMovement = TileHighlight.findRange (GameManager.instance.map [(int)gridPosition.x] [(int)gridPosition.y], movementPerActionPoint, GameManager.instance.players.Where (x => x.gridPosition != gridPosition).Select (x => x.gridPosition).ToArray ());
 					path.Reverse ();
 //					Thread.Sleep(2000);
 					if (path.Where(x => actualMovement.Contains(x)).Count() > 0) 

@@ -219,19 +219,23 @@ public class TileHighlight {
 			List<Tile> neighbors = new List<Tile> ();
 			neighbors = currentTile.neighbors;
 
-			foreach( Tile neighbor in neighbors)
-			{
-				if (neighbor.impassible || closedSet.Contains(neighbor) || occupied.Contains (neighbor.gridPosition)||!range.Contains(neighbor))
-					continue;
-				if (currentTile.cost + neighbor.movementCost < neighbor.cost) {
-					neighbor.cost = currentTile.cost + neighbor.movementCost;
-				} 
+			foreach (Tile neighbor in neighbors) {
 
-				if (!openSet.Contains (neighbor)) {
-					openSet.Add (neighbor);
+				if (neighbor.impassible || closedSet.Contains (neighbor) || occupied.Contains (neighbor.gridPosition) || !range.Contains (neighbor))
+					continue;
+				if (staticRange) {
+					if (currentTile.cost + 1 < neighbor.cost)
+						neighbor.cost = currentTile.cost + 1;
 				}
-				if (neighbor.cost <=movementPoints)
-					result.Add (neighbor);
+				else if (currentTile.cost + neighbor.movementCost < neighbor.cost) {
+						neighbor.cost = currentTile.cost + neighbor.movementCost;
+				}
+				if (!openSet.Contains (neighbor)) {
+						openSet.Add (neighbor);
+					}
+				if (neighbor.cost <= movementPoints)
+						result.Add (neighbor);
+				
 			}
 
 		}

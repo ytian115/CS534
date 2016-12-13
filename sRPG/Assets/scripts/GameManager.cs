@@ -180,12 +180,12 @@ public class GameManager : MonoBehaviour {
 		player.headArmor = Armor.FromKey(ArmorKey.LeatherCap);
 		player.chestArmor = Armor.FromKey(ArmorKey.MagicianCloak);
 		player.handWeapons.Add(Weapon.FromKey(WeaponKey.LongSword));
-		player.baseMovementPerActionPoint = 10;
+		player.baseMovementPerActionPoint = 6;
 		
 		players.Add(player);
 		
-		player = ((GameObject)Instantiate(UserPlayerPrefab, new Vector3((mapSize-1) - Mathf.Floor(mapSize/2),1.5f, -(mapSize-1) + Mathf.Floor(mapSize/2)), Quaternion.Euler(new Vector3()))).GetComponent<UserPlayer>();
-		player.gridPosition = new Vector2(mapSize-1,mapSize-1);
+		player = ((GameObject)Instantiate(UserPlayerPrefab, new Vector3(11 - Mathf.Floor(mapSize/2),1.5f, -8 + Mathf.Floor(mapSize/2)), Quaternion.Euler(new Vector3()))).GetComponent<UserPlayer>();
+		player.gridPosition = new Vector2(11,8);
 		player.playerName = "Kyle";
 		player.chestArmor = Armor.FromKey(ArmorKey.LeatherVest);
 		player.handWeapons.Add(Weapon.FromKey(WeaponKey.ShortSword));
@@ -193,17 +193,17 @@ public class GameManager : MonoBehaviour {
 		
 		players.Add(player);
 				
-		player = ((GameObject)Instantiate(UserPlayerPrefab, new Vector3(4 - Mathf.Floor(mapSize/2),1.5f, -5 + Mathf.Floor(mapSize/2)), Quaternion.Euler(new Vector3()))).GetComponent<UserPlayer>();
-		player.gridPosition = new Vector2(4,5);
-		player.HP = 4;
+		player = ((GameObject)Instantiate(UserPlayerPrefab, new Vector3(3 - Mathf.Floor(mapSize/2),1.5f, -5 + Mathf.Floor(mapSize/2)), Quaternion.Euler(new Vector3()))).GetComponent<UserPlayer>();
+		player.gridPosition = new Vector2(3,5);
+		player.HP = 25;
 		player.playerName = "Lars";
 		player.chestArmor = Armor.FromKey(ArmorKey.IronPlate);
 		player.handWeapons.Add(Weapon.FromKey(WeaponKey.Warhammer));
 		
 		players.Add(player);
 
-		player = ((GameObject)Instantiate(UserPlayerPrefab, new Vector3(8 - Mathf.Floor(mapSize/2),1.5f, -8 + Mathf.Floor(mapSize/2)), Quaternion.Euler(new Vector3()))).GetComponent<UserPlayer>();
-		player.gridPosition = new Vector2(8,8);
+		player = ((GameObject)Instantiate(UserPlayerPrefab, new Vector3(12 - Mathf.Floor(mapSize/2),1.5f, -8 + Mathf.Floor(mapSize/2)), Quaternion.Euler(new Vector3()))).GetComponent<UserPlayer>();
+		player.gridPosition = new Vector2(12,8);
 		player.playerName = "Olivia";
 		player.chestArmor = Armor.FromKey(ArmorKey.MagicianCloak);
 		player.handWeapons.Add(Weapon.FromKey(WeaponKey.LongBow));

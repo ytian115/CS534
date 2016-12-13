@@ -7,7 +7,7 @@ public class UserPlayer : Player {
 	void Start () {
 	
 	}
-	
+		
 	// Update is called once per frame
 	public override void Update () {
 		if (GameManager.instance.players[GameManager.instance.currentPlayerIndex] == this) {
@@ -92,11 +92,13 @@ public class UserPlayer : Player {
 	}
 	public void OnGUI() {
 		//display HP
+		GUI.color = Color.yellow;
+
 		Vector3 locationHp = Camera.main.WorldToScreenPoint(transform.position) + Vector3.up * 35;
-		GUI.TextArea(new Rect(locationHp.x, Screen.height - locationHp.y, 30, 20), HP.ToString());
+		GUI.TextArea(new Rect(locationHp.x, Screen.height - locationHp.y, 50, 20), "HP:"+HP.ToString());
 		Vector3 locationMove = Camera.main.WorldToScreenPoint(transform.position) + Vector3.up * 55;
-		GUI.TextArea(new Rect(locationMove.x, Screen.height - locationMove.y, 60, 20), "M:"+mymoveScore.ToString());
+		GUI.TextArea(new Rect(locationMove.x, Screen.height - locationMove.y, 50, 20), "M:"+mymoveScore.ToString());
 		Vector3 locationAtt = Camera.main.WorldToScreenPoint(transform.position) + Vector3.up * 75;
-		GUI.TextArea(new Rect(locationAtt.x, Screen.height - locationAtt.y, 60, 20), "A:"+myattScore.ToString());
+		GUI.TextArea(new Rect(locationAtt.x, Screen.height - locationAtt.y, 50, 20), "A:"+myattScore.ToString());
 	}
 }
